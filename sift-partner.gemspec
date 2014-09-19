@@ -3,7 +3,7 @@ $:.push File.expand_path("../lib", __FILE__)
 require "sift-partner/version"
 
 Gem::Specification.new do |s|
-  s.name        = "sift_partner"
+  s.name        = "sift-partner"
   s.version     = SiftPartner::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Aaron Beppu"]
@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.summary     = %q{Sift Science Ruby Partner API Gem}
   s.description = %q{Sift Science Ruby Partner API. Please see http://siftscience.com for more details.}
 
-  s.rubyforge_project = "sift_partner"
+  s.rubyforge_project = "sift-partner"
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")

@@ -32,7 +32,7 @@ module SiftPartner
     end
 
     def update_notification_config(cfg)
-      http_post()
+      http_put(notification_config_url(), cfg)
     end
 
     private
@@ -41,7 +41,7 @@ module SiftPartner
       end
 
       def notification_config_url 
-        URI("#{API_ENDPOINT}/accounts/#{id}/config")
+        URI("#{API_ENDPOINT}/accounts/#{@id}/config")
       end
 
       def safe_json(http_response)
@@ -67,9 +67,21 @@ module SiftPartner
         safe_json(http_response)
       end
 
+      def http_put(uri, bodyObj)
+        header = {"Content-Type" => "application/json", 
+                  "Authorization" => "Basic #{@api_key}"}
+        puts "putting to #{uri} , #{bodyObj}"
+        req = Net::HTTP::Put.new(uri.path, initheader = header)
+        req.body = bodyObj.to_json
+        https = prep_https(uri)
+        http_response = https.request req
+        safe_json(http_response)
+      end
+      
       def http_post(uri, bodyObj)
         header = {"Content-Type" => "application/json", 
                   "Authorization" => "Basic #{@api_key}"}
+        puts "posting to #{uri} , #{bodyObj}"
         req = Net::HTTP::Post.new(uri.path, initheader = header)
         req.body = bodyObj.to_json
         https = prep_https(uri)
