@@ -2,6 +2,7 @@ require 'uri'
 require 'json'
 require 'net/http'
 require 'sift' # we use Response
+require 'pp'
 
 module SiftPartner
 
@@ -49,12 +50,13 @@ module SiftPartner
         if !response.nil? and response.ok?
           response.json
         else
-          puts "bad value in safeJson : \n#{response}"
+          puts "bad value in safeJson :"
+          PP.pp(response)
         end
       end
 
       def prep_https(uri)
-        https = Net::HTTP.new(uri.host,uri.port)
+        https = Net::HTTP.new(uri.host, uri.port)
         https.use_ssl = true
         https
       end
@@ -70,7 +72,6 @@ module SiftPartner
       def http_put(uri, bodyObj)
         header = {"Content-Type" => "application/json",
                   "Authorization" => "Basic #{@api_key}"}
-        puts "putting to #{uri} , #{bodyObj}"
         req = Net::HTTP::Put.new(uri.path, initheader = header)
         req.body = bodyObj.to_json
         https = prep_https(uri)
@@ -81,7 +82,6 @@ module SiftPartner
       def http_post(uri, bodyObj)
         header = {"Content-Type" => "application/json",
                   "Authorization" => "Basic #{@api_key}"}
-        puts "posting to #{uri} , #{bodyObj}"
         req = Net::HTTP::Post.new(uri.path, initheader = header)
         req.body = bodyObj.to_json
         https = prep_https(uri)
