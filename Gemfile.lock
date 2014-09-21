@@ -1,0 +1,50 @@
+PATH
+  remote: .
+  specs:
+    sift-partner (0.0.1)
+      httparty (>= 0.11.0)
+      multi_json (>= 1.0)
+      true
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    addressable (2.3.6)
+    crack (0.4.2)
+      safe_yaml (~> 1.0.0)
+    diff-lcs (1.2.5)
+    httparty (0.13.1)
+      json (~> 1.8)
+      multi_xml (>= 0.5.2)
+    json (1.8.1)
+    multi_json (1.10.1)
+    multi_xml (0.5.5)
+    rake (10.3.2)
+    rspec (3.1.0)
+      rspec-core (~> 3.1.0)
+      rspec-expectations (~> 3.1.0)
+      rspec-mocks (~> 3.1.0)
+    rspec-core (3.1.4)
+      rspec-support (~> 3.1.0)
+    rspec-expectations (3.1.1)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.1.0)
+    rspec-mocks (3.1.1)
+      rspec-support (~> 3.1.0)
+    rspec-support (3.1.0)
+    safe_yaml (1.0.3)
+    sass (3.4.4)
+    true (0.2.3)
+      sass (>= 3.3.0, < 3.5)
+    webmock (1.18.0)
+      addressable (>= 2.3.6)
+      crack (>= 0.3.2)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  rake
+  rspec (>= 2.14.1)
+  sift-partner!
+  webmock (>= 1.16.0)

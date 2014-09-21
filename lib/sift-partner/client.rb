@@ -6,10 +6,10 @@ require 'sift' # we use Response
 module SiftPartner
 
   class Client
-    API_ENDPOINT = "https://api3.siftscience.com/v3"
+    API_ENDPOINT = "https://partner.siftscience.com/v3"
     API_TIMEOUT = 2
 
-    def initialize(api_key = Sift.api_key, id = Sift.account_id) 
+    def initialize(api_key = Sift.api_key, id = Sift.account_id)
       @api_key = api_key
       @id = id
     end
@@ -20,9 +20,9 @@ module SiftPartner
                  :analyst_email => analyst_email, :password => password}
       begin
         http_post(accounts_url(), reqBody)
-      rescue Exception => e  
-        puts e.message  
-        puts e.backtrace.inspect  
+      rescue Exception => e
+        puts e.message
+        puts e.backtrace.inspect
       end
 
     end
@@ -40,7 +40,7 @@ module SiftPartner
         URI("#{API_ENDPOINT}/partners/#{@id}/accounts")
       end
 
-      def notification_config_url 
+      def notification_config_url
         URI("#{API_ENDPOINT}/accounts/#{@id}/config")
       end
 
@@ -68,7 +68,7 @@ module SiftPartner
       end
 
       def http_put(uri, bodyObj)
-        header = {"Content-Type" => "application/json", 
+        header = {"Content-Type" => "application/json",
                   "Authorization" => "Basic #{@api_key}"}
         puts "putting to #{uri} , #{bodyObj}"
         req = Net::HTTP::Put.new(uri.path, initheader = header)
@@ -77,9 +77,9 @@ module SiftPartner
         http_response = https.request req
         safe_json(http_response)
       end
-      
+
       def http_post(uri, bodyObj)
-        header = {"Content-Type" => "application/json", 
+        header = {"Content-Type" => "application/json",
                   "Authorization" => "Basic #{@api_key}"}
         puts "posting to #{uri} , #{bodyObj}"
         req = Net::HTTP::Post.new(uri.path, initheader = header)
