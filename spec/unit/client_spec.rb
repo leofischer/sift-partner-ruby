@@ -66,8 +66,7 @@ describe SiftPartner::Client do
 	end
 
   it "should march through account listing flow" do
-    stub_request(:get, /.*/).
-      with(:headers => {'Accept'=>'*/*', 'User-Agent'=>'Ruby'}).
+    stub_request(:get, /https:\/\/.*partner\.siftscience\.com\/v3\/partners\/#{partner_id}\/accounts/).
       to_return(
         {:body =>
           { "type" => "partner_account", "data" => [expected_account_body.to_json],

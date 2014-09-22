@@ -1,8 +1,7 @@
 require 'uri'
 require 'json'
-require 'net/http'
+require 'httparty'
 require 'sift' # we use Response
-require 'pp'
 
 module SiftPartner
 
@@ -62,30 +61,22 @@ module SiftPartner
       end
 
       def http_get(uri)
-        header = {"Authorization" => "Basic #{@api_key}"}
-        req = Net::HTTP::Get.new(uri.path, initheader = header)
-        https = prep_https(uri)
-        http_response = https.request req
+        header =  {"Authorization" => "Basic #{@api_key}"}
+        http_response = HTTParty.get(uri, :headers =>header)
         safe_json(http_response)
       end
 
       def http_put(uri, bodyObj)
         header = {"Content-Type" => "application/json",
                   "Authorization" => "Basic #{@api_key}"}
-        req = Net::HTTP::Put.new(uri.path, initheader = header)
-        req.body = bodyObj.to_json
-        https = prep_https(uri)
-        http_response = https.request req
+        http_response = HTTParty.put(uri, :body => bodyObj.to_json, :headers => header)
         safe_json(http_response)
       end
 
       def http_post(uri, bodyObj)
         header = {"Content-Type" => "application/json",
                   "Authorization" => "Basic #{@api_key}"}
-        req = Net::HTTP::Post.new(uri.path, initheader = header)
-        req.body = bodyObj.to_json
-        https = prep_https(uri)
-        http_response = https.request req
+        http_response = HTTParty.post(uri, :body => bodyObj.to_json, :headers => header)
         safe_json(http_response)
       end
   end
