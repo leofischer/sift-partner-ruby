@@ -7,10 +7,10 @@ require "webmock/rspec"
 WebMock.disable_net_connect!
 
 RSpec.configure do |config|
-	config.expect_with :rspec do |c|
+  config.expect_with :rspec do |c|
     c.syntax = :should
   end
-	config.mock_with :rspec do |c|
+  config.mock_with :rspec do |c|
     c.syntax = :should
   end
 end

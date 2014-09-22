@@ -5,16 +5,40 @@ require 'sift' # we use Response
 
 module SiftPartner
 
+  # Ruby bindings for Sift Science's Partner API.
+  # For background and examples on how to use the Partner API with this client
+  # please refer to https://siftscience.com/resources/references/partner-ruby.html
   class Client
     API_ENDPOINT = "https://partner.siftscience.com/v3"
     API_TIMEOUT = 2
 
+    #
+    # Constructor
+    # == Parameters:
+    # api_key
+    #   The api_key of the partner
+    #   (which may be found in the api_keys section of the console)
+    # id
+    #   The account id of the partner
+    #   (which may be found in the settings page of the console)
     def initialize(api_key = Sift.api_key, id = Sift.account_id)
       @api_key = api_key
       @id = id
     end
 
-    # returns nil if there was an exception
+    # Creates a new merchant account under the given partner.
+    # == Parameters:
+    # site_url
+    #    the url of the merchant site
+    # site_email
+    #    an email address for the merchant
+    # analyst_email
+    #    an email address which will be used to log in at the Sift Console
+    # password
+    #    password (at least 10 chars) to be used to sign into the Console
+    #
+    # When successful, returns a including the new account id and credentials.
+    # When an error occurs, returns nil.
     def new_account(site_url, site_email, analyst_email, password)
       reqBody = {:site_url => site_url, :site_email => site_email,
                  :analyst_email => analyst_email, :password => password}
@@ -27,10 +51,25 @@ module SiftPartner
 
     end
 
+    # Gets a listing of the ids and keys for all merchant accounts that have
+    # been created by this partner.
+    #
+    # When successful, returns a hash including the key :data, which is an
+    # array of account descriptions. (Each element has the same structure as a
+    # single response from new_account).
     def get_accounts()
       http_get(accounts_url)
     end
 
+    # Updates the configuration which controls http notifications for all merchant
+    # accounts under this partner.
+    #
+    # == Parameters
+    # cfg
+    #   A Hash, with keys :http_notification_url and :http_notification_threshold
+    #   The value of the notification_url will be a url containing the string '%s' exactly once.
+    #   This allows the url to be used as a template, into which a merchant account id can be substituted.
+    #   The  notification threshold should be a floating point number between 0.0 and 1.0
     def update_notification_config(cfg)
       http_put(notification_config_url(), cfg)
     end

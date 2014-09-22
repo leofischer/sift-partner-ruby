@@ -41,29 +41,29 @@ describe SiftPartner::Client do
 
   it "should march through create acct flow" do
     site_url = "merchant123.com"
-		site_email = "owner@merchant123.com"
-		analyst_email = "analyst+merchant123@partner.com"
-		password = "s0m3l0ngp455w0rd"
+    site_email = "owner@merchant123.com"
+    analyst_email = "analyst+merchant123@partner.com"
+    password = "s0m3l0ngp455w0rd"
     # when we receive the mocked url, it will include the basic auth header encoded
     # and regurgitated before the host name
-		stub_request(:post, /https:\/\/.*\@partner\.siftscience\.com\/v3\/partners\/#{partner_id}\/accounts/).
-			with { |request|
-				parsed_body = JSON.parse(request.body)
-				parsed_body.should include("site_url" => site_url)
-				parsed_body.should include("site_email" => site_email)
+    stub_request(:post, /https:\/\/.*\@partner\.siftscience\.com\/v3\/partners\/#{partner_id}\/accounts/).
+      with { |request|
+        parsed_body = JSON.parse(request.body)
+        parsed_body.should include("site_url" => site_url)
+        parsed_body.should include("site_email" => site_email)
         parsed_body.should include("analyst_email" => analyst_email)
         parsed_body.should include("password" => password)
-			}.to_return({
+      }.to_return({
         :status => 200,
         :headers => {},
         :body => expected_account_body.to_json})
       partner_client = SiftPartner::Client.new(partner_api_key, partner_id)
 
       response = partner_client.new_account(site_url, site_email, analyst_email,
-				password)
-			response.should_not be_nil
+      password)
+      response.should_not be_nil
       response["production"]["api_keys"][0]["state"].should eq("ACTIVE")
-	end
+    end
 
   it "should march through account listing flow" do
     stub_request(:get, /https:\/\/.*partner\.siftscience\.com\/v3\/partners\/#{partner_id}\/accounts/).
