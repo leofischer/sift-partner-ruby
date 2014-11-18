@@ -79,6 +79,10 @@ module SiftPartner
         URI("#{API_ENDPOINT}/partners/#{@id}/accounts")
       end
 
+      def user_agent
+        "SiftScience/v#{API_VERSION} sift-partner-ruby/#{VERSION}"
+      end
+
       def notification_config_url
         URI("#{API_ENDPOINT}/accounts/#{@id}/config")
       end
@@ -100,21 +104,26 @@ module SiftPartner
       end
 
       def http_get(uri)
-        header =  {"Authorization" => "Basic #{@api_key}"}
+        header =  {"Authorization" => "Basic #{@api_key}",
+                    "User-Agent" => user_agent}
+
         http_response = HTTParty.get(uri, :headers =>header)
         safe_json(http_response)
       end
 
       def http_put(uri, bodyObj)
         header = {"Content-Type" => "application/json",
-                  "Authorization" => "Basic #{@api_key}"}
+                  "Authorization" => "Basic #{@api_key}",
+                  "User-Agent" => user_agent}
+
         http_response = HTTParty.put(uri, :body => bodyObj.to_json, :headers => header)
         safe_json(http_response)
       end
 
       def http_post(uri, bodyObj)
         header = {"Content-Type" => "application/json",
-                  "Authorization" => "Basic #{@api_key}"}
+                  "Authorization" => "Basic #{@api_key}",
+                  "User-Agent" => user_agent}
         http_response = HTTParty.post(uri, :body => bodyObj.to_json, :headers => header)
         safe_json(http_response)
       end
