@@ -84,7 +84,7 @@ module SiftPartner
     #  1.0, determining the score threshold at which to push
     #  notifications.  It represents the Sift Score/100
     #
-    # DEPRECIATED USE:
+    # DEPRECATED USE:
     #   notification_url may also be a Hash, with keys
     #   http_notification_url and http_notification_threshold.
     #   The value of the notification_url will be a url containing the
@@ -96,7 +96,7 @@ module SiftPartner
 
       properties = {}
       
-      # To support depreciated use
+      # To support deprecated use
       if notification_url.is_a? Hash
         properties = notification_url
       else
