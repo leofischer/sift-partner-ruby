@@ -139,44 +139,15 @@ describe SiftPartner::Client do
       response["totalResults"].should eq(1)
   end
 
-  it "config update fails with nil, empty, or non-string notification url" do
-    partner_client = SiftPartner::Client.new(partner_api_key, partner_id)
-    lambda { partner_client.update_notification_config(nil, 0.1) }.should raise_error
-    lambda { partner_client.update_notification_config("", 0.1) }.should raise_error
-    lambda { partner_client.update_notification_config(12345, 0.1) }.should raise_error
-  end
+  
 
-  it "config update fails with nil, or non-float notification threshold" do
+  it "config update fails with nil, or non-hash notification threshold" do
     partner_client = SiftPartner::Client.new(partner_api_key, partner_id)
-    lambda { partner_client.update_notification_config("https://api.partners.com/notify?account=%s", nil) }.should raise_error
-    lambda { partner_client.update_notification_config("https://api.partners.com/notify?account=%s", "notafloat") }.should raise_error
+    lambda { partner_client.update_notification_config(nil) }.should raise_error
+    lambda { partner_client.update_notification_config("not_a_hash") }.should raise_error
   end
 
   it "should work through config update flow" do
-    stub_request(:put, /https:\/\/.*\@partner\.siftscience\.com\/v3\/accounts\/#{partner_id}\/config/).
-      with { |request|
-        parsed_body = JSON.parse(request.body)
-        parsed_body.should include("http_notification_threshold" => 0.1)
-        parsed_body.should include("http_notification_url" => "https://api.partners.com/notify?account=%s")
-      }.to_return({:status => 200, :headers => {},
-          :body => {
-            "email_notifiction_threshold" => 0.899,
-            "http_notification_url" => "https://api.partners.com/notify?account=%s",
-            "http_notification_threshold" => 0.1,
-            "is_production" => true,
-            "enable_sor_by_expected_loss" => false
-          }.to_json
-      })
-      partner_client = SiftPartner::Client.new(partner_api_key, partner_id)
-      response = partner_client.update_notification_config("https://api.partners.com/notify?account=%s", 0.1)
-      response.should_not be_nil
-      epsilon = 1e-6
-      response["http_notification_url"].should eq("https://api.partners.com/notify?account=%s")
-      response["http_notification_threshold"].should < 0.1 + epsilon
-      response["http_notification_threshold"].should > 0.1 - epsilon
-  end
-
-  it "should work through depreciated config update flow" do
     stub_request(:put, /https:\/\/.*\@partner\.siftscience\.com\/v3\/accounts\/#{partner_id}\/config/).
       with { |request|
         parsed_body = JSON.parse(request.body)

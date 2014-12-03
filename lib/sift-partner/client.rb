@@ -22,8 +22,8 @@ module SiftPartner
     #   The account id of the partner
     #   (which may be found in the settings page of the console)
     def initialize(api_key = Sift.api_key, id = Sift.account_id)
-      raise(RuntimeError, "api_key must be a non-empty string") if (!api_key.is_a? String) || api_key.empty?
-      raise(RuntimeError, "partner must be a non-empty string") if (!id.is_a? String) || id.empty?
+      raise("api_key must be a non-empty string") unless valid_string?(api_key)
+      raise("partner must be a non-empty string") unless valid_string?(id)
       @api_key = api_key
       @id = id
     end
@@ -43,10 +43,10 @@ module SiftPartner
     # When an error occurs, returns nil.
     def new_account(site_url, site_email, analyst_email, password)
 
-      raise(RuntimeError, "site url must be a non-empty string") if (!site_url.is_a? String) || site_url.empty?
-      raise(RuntimeError, "site email must be a non-empty string") if (!site_email.is_a? String) || site_email.empty?
-      raise(RuntimeError, "analyst email must be a non-empty string") if (!analyst_email.is_a? String) || analyst_email.empty?
-      raise(RuntimeError, "password must be a non-empty string") if (!password.is_a? String) || password.empty?
+      raise("site url must be a non-empty string") unless valid_string?(site_url)
+      raise("site email must be a non-empty string") unless valid_string?(site_email)
+      raise("analyst email must be a non-empty string") unless valid_string?(analyst_email)
+      raise("password must be a non-empty string") unless valid_string?(password)
 
       reqBody = {:site_url => site_url, :site_email => site_email,
                  :analyst_email => analyst_email, :password => password}
@@ -73,42 +73,16 @@ module SiftPartner
     # accounts under this partner.
     #
     # == Parameters
-    # notification_url
-    #  A String which determines the url to which
-    #  the POST notifications go,containing the string '%s' exactly
-    #  once.  This allows the url to be used as a template, into which a
-    #  merchant account id can be substituted.
-    #
-    # notification_threshold
-    #  A floating point number between 0.0 and
-    #  1.0, determining the score threshold at which to push
-    #  notifications.  It represents the Sift Score/100
-    #
-    # DEPRECATED USE:
-    #   notification_url may also be a Hash, with keys
-    #   http_notification_url and http_notification_threshold.
-    #   The value of the notification_url will be a url containing the
-    #   string '%s' exactly once.  This allows the url to be used as a
-    #   template, into which a merchant account id can be substituted.
-    #   The  notification threshold should be a floating point number
-    #   between 0.0 and 1.0
-    def update_notification_config(notification_url = nil, notification_threshold = nil)
+    # cfg
+    #   A Hash, with keys :http_notification_url and :http_notification_threshold
+    #   The value of the notification_url will be a url containing the string '%s' exactly once.
+    #   This allows the url to be used as a template, into which a merchant account id can be substituted.
+    #   The  notification threshold should be a floating point number between 0.0 and 1.0
+    def update_notification_config(cfg = nil)
 
-      properties = {}
-      
-      # To support deprecated use
-      if notification_url.is_a? Hash
-        properties = notification_url
-      else
-        raise(RuntimeError, "notification url must be a non-empty string") if (!notification_url.is_a? String) || notification_url.empty?
-        raise(RuntimeError, "notification threshold must be a float") if (!notification_threshold.is_a? Float)
+      raise("configuration must be a hash") unless cfg.is_a? Hash
 
-        properties['http_notification_url'] = notification_url
-        properties['http_notification_threshold'] = notification_threshold
-
-      end
-
-      http_put(notification_config_url(), properties)
+      http_put(notification_config_url(), cfg)
     end
 
     private
@@ -163,6 +137,10 @@ module SiftPartner
                   "User-Agent" => user_agent}
         http_response = HTTParty.post(uri, :body => bodyObj.to_json, :headers => header)
         safe_json(http_response)
+      end
+
+      def valid_string?(s)
+        s.is_a?(String) && !s.empty?
       end
   end
 end
