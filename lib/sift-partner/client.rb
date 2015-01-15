@@ -76,7 +76,7 @@ module SiftPartner
 
     private
       def accounts_url
-        URI("#{API_ENDPOINT}/partners/#{@id}/accounts")
+        "#{API_ENDPOINT}/partners/#{@id}/accounts"
       end
 
       def user_agent
@@ -84,7 +84,7 @@ module SiftPartner
       end
 
       def notification_config_url
-        URI("#{API_ENDPOINT}/accounts/#{@id}/config")
+        "#{API_ENDPOINT}/accounts/#{@id}/config"
       end
 
       def safe_json(http_response)
