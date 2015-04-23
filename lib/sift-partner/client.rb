@@ -88,7 +88,7 @@ module SiftPartner
       end
 
       def safe_json(http_response)
-        response = Sift::Response.new(http_response.body, http_response.headers, http_response.code, http_response.response)
+        response = Sift::Response.new(http_response.body, http_response.code, http_response.response)
         if !response.nil? and response.ok?
           response.json
         else
