@@ -93,7 +93,7 @@ module SiftPartner
           response.json
         else
           puts "bad value in safeJson :"
-          PP.pp(response)
+          puts response.inspect
         end
       end
 
